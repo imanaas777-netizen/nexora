@@ -1,1 +1,340 @@
 
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora — Каталог нейросетей и генератор промптов</title>
+<meta name="description" content="Nexora — каталог лучших нейросетей и умный генератор промптов в одном месте.">
+<style>
+:root{--bg:#09090f;--card:#12121c;--card2:#181826;--line:#25253a;--tx:#f2f2f8;--mut:#9a9ab5;--acc:#7c3aed;--acc2:#4f46e5;--ok:#10b981;--gold:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(9,9,15,.92);backdrop-filter:blur(10px);z-index:10}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}
+.logo i{font-style:normal;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--acc),#3b82f6);display:grid;place-items:center;font-size:17px}
+.tabs{display:flex;gap:6px;background:var(--card);padding:5px;border-radius:12px;border:1px solid var(--line)}
+.tab{background:none;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--mut);font-weight:600;font-size:14px}
+.tab.on{background:var(--acc);color:#fff}
+.pro{background:#064e3b;color:#6ee7b7;font-size:10px;padding:2px 6px;border-radius:5px;margin-left:4px}
+.hero{text-align:center;padding:40px 0 24px}
+.pill{display:inline-block;font-size:12px;color:var(--mut);border:1px solid var(--line);background:var(--card);padding:6px 14px;border-radius:99px}
+h1{font-size:clamp(32px,7vw,56px);line-height:1.1;margin:18px 0 14px;font-weight:800}
+h1 span{background:linear-gradient(90deg,#a78bfa,#60a5fa,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);max-width:640px;margin:0 auto 24px}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 16px;max-width:700px;margin:0 auto}
+.search input{flex:1;background:none;border:0;outline:0;padding:15px 0;font-size:15px}
+.search:focus-within{border-color:var(--acc)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:22px 0 10px}
+.chip{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:99px;cursor:pointer;font-size:14px;color:var(--tx)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chip.fav{color:var(--gold)}
+select{background:var(--card);border:1px solid var(--line);padding:9px 12px;border-radius:10px;margin-left:auto}
+.count{color:var(--mut);font-size:13px;margin:8px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding-bottom:50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;transition:.2s}
+.card:hover{border-color:var(--acc);transform:translateY(-2px)}
+.top{display:flex;gap:12px;align-items:center}
+.ic{width:44px;height:44px;border-radius:12px;background:var(--card2);display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.nm{font-weight:700}
+.ct{font-size:12px;color:var(--mut)}
+.star{margin-left:auto;background:none;border:0;font-size:20px;cursor:pointer;color:var(--mut)}
+.star.on{color:var(--gold)}
+.desc{color:var(--mut);font-size:14px;flex:1}
+.foot{display:flex;justify-content:space-between;align-items:center}
+.tag{font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px}
+.t-free{background:#064e3b;color:#6ee7b7}
+.t-freemium{background:#0c2a4d;color:#7dd3fc}
+.t-paid{background:#4a3205;color:#fcd34d}
+.open{color:#a78bfa;font-size:13px;font-weight:600;text-decoration:none}
+.empty{text-align:center;color:var(--mut);padding:50px 0;grid-column:1/-1}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:30px 0}
+.panel h2{font-size:22px;margin-bottom:6px}
+.panel p.s{color:var(--mut);font-size:14px;margin-bottom:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.inp{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px 14px;outline:0}
+.inp:focus{border-color:var(--acc)}
+textarea.inp{width:100%;min-height:130px;resize:vertical}
+.btn{background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;color:#fff;padding:12px 20px;border-radius:12px;cursor:pointer;font-weight:700}
+.btn.ghost{background:var(--card2);border:1px solid var(--line)}
+.lbl{font-size:13px;color:var(--mut);margin:16px 0 8px;display:block}
+.sendgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.send{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;text-align:left;display:flex;gap:10px;align-items:center}
+.send:hover{border-color:var(--acc)}
+.send b{display:block;font-size:14px}
+.send small{color:var(--mut);font-size:11px}
+.auto{color:var(--ok)!important}
+.hide{display:none!important}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ok);color:#04130d;padding:12px 20px;border-radius:12px;font-weight:700;z-index:50;opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+footer{border-top:1px solid var(--line);color:var(--mut);text-align:center;font-size:13px;padding:24px 0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="logo"><i>N</i> Nexora</div>
+    <div class="tabs">
+      <button class="tab on" data-v="catalog">Каталог ИИ</button>
+      <button class="tab" data-v="gen">Генератор промптов <span class="pro">PRO</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="catalog">
+    <div class="hero">
+      <span class="pill">⚡ Nexora — все лучшие нейросети и умные промпты в одном месте</span>
+      <h1>Навигатор по миру <span>искусственного интеллекта</span></h1>
+      <p class="sub">Ищи проверенные нейросети для текста, фото, видео, озвучки и кода — или перейди в генератор, чтобы в один клик отправить готовый промпт в нейросеть.</p>
+      <div class="search">🔍<input id="q" type="search" placeholder="Поиск по названию или задаче (например: озвучка, видео, логотип)"></div>
+    </div>
+
+    <div class="filters" id="cats"></div>
+    <div class="filters" style="margin-top:0">
+      <button class="chip fav" id="favBtn">★ Избранное (0)</button>
+      <select id="tier">
+        <option value="all">Любой тариф</option>
+        <option value="free">Бесплатно</option>
+        <option value="freemium">Freemium</option>
+        <option value="paid">Платно</option>
+      </select>
+    </div>
+    <div class="count" id="count"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="gen" class="hide">
+    <div class="panel">
+      <h2>✨ Генератор промптов</h2>
+      <p class="s">Напиши тему (например: «космос»), выбери тип — получишь готовый промпт. Дальше нажми на нейросеть, и промпт уйдёт к ней.</p>
+
+      <div class="row">
+        <input class="inp" id="topic" placeholder="Тема: космос, логотип кофейни, реклама кроссовок...">
+        <button class="btn" id="makeBtn">Создать промпт</button>
+      </div>
+
+      <span class="lbl">Тип задачи</span>
+      <div class="filters" id="gcats" style="margin:0"></div>
+
+      <span class="lbl">Твой промпт (можно править)</span>
+      <textarea class="inp" id="prompt" placeholder="Здесь появится готовый промпт..."></textarea>
+      <div class="row" style="margin:10px 0 0">
+        <button class="btn ghost" id="copyBtn">📋 Скопировать</button>
+      </div>
+
+      <span class="lbl">Отправить в нейросеть</span>
+      <div class="sendgrid" id="sendgrid"></div>
+      <p class="s" style="margin-top:14px"><span class="auto">⚡ Авто</span> — текст подставится сам. У остальных промпт копируется, сайт открывается, и ты просто вставляешь его в поле.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>Nexora · Каталог нейросетей · Тарифы и условия сервисов могут меняться — проверяйте на официальных сайтах</footer>
+<div class="toast" id="toast"></div><script>
+const CATS = {text:"💬 Текст и чаты", image:"🎨 Картинки", video:"🎬 Видео", audio:"🎵 Аудио и голос", code:"💻 Код и сайты"};
+const CAT_NAME = {text:"Текст", image:"Картинки", video:"Видео", audio:"Аудио", code:"Код"};
+const TIERS = {free:"Бесплатно", freemium:"Freemium", paid:"Платно"};
+
+const TOOLS = [
+ {n:"ChatGPT",c:"text",t:"freemium",i:"🤖",d:"Самый популярный ИИ-ассистент для текстов, идей, переводов, анализа и учёбы.",u:"https://chatgpt.com",p:"https://chatgpt.com/?q=",k:"чат текст openai gpt идеи перевод учеба"},
+ {n:"Google Gemini",c:"text",t:"freemium",i:"✨",d:"Мультимодальная нейросеть от Google для работы с текстом, кодом и документами.",u:"https://gemini.google.com",k:"чат текст google гугл документы"},
+ {n:"Claude",c:"text",t:"freemium",i:"🧠",d:"Глубокие тексты, сценарии, анализ больших файлов и программирование.",u:"https://claude.ai",p:"https://claude.ai/new?q=",k:"чат текст anthropic анализ код сценарий файлы"},
+ {n:"DeepSeek",c:"text",t:"free",i:"🐋",d:"Бесплатная рассуждающая модель, не уступающая топовым платным аналогам.",u:"https://chat.deepseek.com",k:"чат текст бесплатно рассуждение код математика"},
+ {n:"Perplexity AI",c:"text",t:"freemium",i:"🔍",d:"Умный ИИ-поисковик с актуальными данными из интернета и ссылками на источники.",u:"https://www.perplexity.ai",p:"https://www.perplexity.ai/search?q=",k:"поиск интернет источники исследование новости"},
+ {n:"Grok",c:"text",t:"freemium",i:"⚡",d:"Нейросеть от xAI с доступом к свежим новостям в реальном времени.",u:"https://grok.com",p:"https://grok.com/?q=",k:"чат текст xai новости маск"},
+ {n:"Microsoft Copilot",c:"text",t:"free",i:"🪟",d:"Бесплатный ассистент от Microsoft: чат, поиск, картинки и помощь с документами.",u:"https://copilot.microsoft.com",p:"https://copilot.microsoft.com/?q=",k:"чат текст microsoft майкрософт офис бесплатно"},
+ {n:"Le Chat (Mistral)",c:"text",t:"freemium",i:"🌬️",d:"Быстрый европейский ИИ-ассистент от Mistral с поиском и анализом документов.",u:"https://chat.mistral.ai",k:"чат текст mistral европа быстрый"},
+ {n:"Qwen",c:"text",t:"free",i:"🐼",d:"Мощная бесплатная нейросеть от Alibaba для текста, кода, картинок и видео.",u:"https://chat.qwen.ai",k:"чат текст alibaba китай бесплатно код"},
+ {n:"Kimi",c:"text",t:"free",i:"🌙",d:"Бесплатный ИИ с огромным контекстом: читает длинные документы и книги.",u:"https://www.kimi.com",k:"чат текст длинные документы книги китай"},
+ {n:"Алиса AI",c:"text",t:"free",i:"🟣",d:"Русскоязычный ассистент от Яндекса: ответы, тексты, картинки и поиск.",u:"https://alice.yandex.ru",k:"чат текст яндекс русский алиса yandex"},
+ {n:"GigaChat",c:"text",t:"freemium",i:"🟢",d:"Российская нейросеть от Сбера для текстов, идей и генерации изображений.",u:"https://giga.chat",k:"чат текст сбер русский россия"},
+ {n:"Meta AI",c:"text",t:"free",i:"♾️",d:"Бесплатный ассистент от Meta на базе Llama: чат и генерация картинок.",u:"https://www.meta.ai",k:"чат текст meta facebook llama бесплатно"},
+ {n:"Poe",c:"text",t:"freemium",i:"🅿️",d:"Платформа, где в одном месте доступны десятки разных нейросетей и ботов.",u:"https://poe.com",k:"чат боты агрегатор много моделей"},
+ {n:"NotebookLM",c:"text",t:"freemium",i:"📓",d:"Загружай свои документы и задавай вопросы. Умеет делать подкасты по материалам.",u:"https://notebooklm.google.com",k:"документы конспект подкаст учеба google исследование pdf"},
+ {n:"Character.AI",c:"text",t:"freemium",i:"🎭",d:"Живые диалоги с персонажами: от героев фильмов до вымышленных личностей.",u:"https://character.ai",k:"персонажи ролевые общение чат развлечение"},
+
+ {n:"Midjourney",c:"image",t:"paid",i:"🎨",d:"Эталон фотореалистичной и художественной генерации картинок по тексту.",u:"https://www.midjourney.com",k:"картинки фото арт изображение рисунок генерация"},
+ {n:"Leonardo AI",c:"image",t:"freemium",i:"🖼️",d:"Арты, игровые ассеты и фото с ежедневными бесплатными токенами.",u:"https://leonardo.ai",k:"картинки арт игры ассеты фото бесплатно"},
+ {n:"Ideogram",c:"image",t:"freemium",i:"🔤",d:"Лучше всех рисует текст на картинках: постеры, логотипы, открытки.",u:"https://ideogram.ai",k:"картинки логотип постер текст надпись"},
+ {n:"Recraft AI",c:"image",t:"freemium",i:"✒️",d:"Векторная графика, иконки, логотипы и брендовый дизайн.",u:"https://www.recraft.ai",k:"логотип вектор иконки дизайн бренд svg"},
+ {n:"Adobe Firefly",c:"image",t:"freemium",i:"🔥",d:"Безопасная для коммерции генерация картинок от Adobe, встроена в Photoshop.",u:"https://firefly.adobe.com",k:"картинки adobe photoshop дизайн редактирование"},
+ {n:"Flux (Black Forest Labs)",c:"image",t:"freemium",i:"🌲",d:"Одна из лучших моделей для детальных и реалистичных изображений.",u:"https://bfl.ai",k:"картинки фото реализм flux модель"},
+ {n:"Kandinsky",c:"image",t:"free",i:"🟦",d:"Российская бесплатная нейросеть для картинок и коротких видео.",u:"https://fusionbrain.ai",k:"картинки бесплатно русский сбер кандинский видео"},
+ {n:"Krea AI",c:"image",t:"freemium",i:"⚙️",d:"Генерация и улучшение изображений в реальном времени, апскейл.",u:"https://www.krea.ai",k:"картинки реальное время апскейл улучшение"},
+ {n:"Canva AI",c:"image",t:"freemium",i:"🎯",d:"Дизайн-платформа с ИИ: презентации, посты, баннеры и картинки.",u:"https://www.canva.com",k:"дизайн презентации баннер соцсети посты шаблоны"},
+ {n:"Playground AI",c:"image",t:"freemium",i:"🛝",d:"Редактор и генератор изображений с удобным интерфейсом.",u:"https://playground.com",k:"картинки редактор постеры соцсети"},
+
+ {n:"Sora",c:"video",t:"paid",i:"🌅",d:"Видеомодель от OpenAI: реалистичные ролики по текстовому описанию.",u:"https://sora.com",k:"видео ролик openai генерация кино"},
+ {n:"Google Veo",c:"video",t:"paid",i:"🎥",d:"Видеомодель от Google с реалистичной картинкой и звуком.",u:"https://labs.google/flow",k:"видео google гугл кино звук генерация"},
+ {n:"Runway",c:"video",t:"freemium",i:"🛫",d:"Профессиональная генерация и редактирование видео для креаторов.",u:"https://runwayml.com",k:"видео монтаж редактирование креатор кино"},
+ {n:"Kling AI",c:"video",t:"freemium",i:"🎬",d:"Мощная китайская видеомодель с отличной физикой и движением.",u:"https://klingai.com",k:"видео генерация движение китай реализм"},
+ {n:"Luma Dream Machine",c:"video",t:"freemium",i:"💭",d:"Быстрое превращение текста и фото в кинематографичные видео.",u:"https://lumalabs.ai",k:"видео фото оживить кино luma"},
+ {n:"Pika",c:"video",t:"freemium",i:"🐰",d:"Простая генерация коротких видео и забавных эффектов.",u:"https://pika.art",k:"видео эффекты короткие shorts reels"},
+ {n:"Hailuo AI",c:"video",t:"freemium",i:"🌊",d:"Видеогенератор MiniMax с плавными движениями и сильным качеством.",u:"https://hailuoai.video",k:"видео minimax генерация движение"},
+ {n:"HeyGen",c:"video",t:"freemium",i:"🧑‍💼",d:"ИИ-аватары, говорящие ролики и перевод видео с синхронизацией губ.",u:"https://www.heygen.com",k:"аватар видео говорящий перевод озвучка презентация"},
+ {n:"Synthesia",c:"video",t:"paid",i:"🧑‍🏫",d:"Обучающие и бизнес-видео с ИИ-ведущим без съёмок.",u:"https://www.synthesia.io",k:"аватар видео обучение бизнес ведущий"},
+ {n:"CapCut",c:"video",t:"freemium",i:"✂️",d:"Популярный видеоредактор с ИИ-функциями, субтитрами и шаблонами.",u:"https://www.capcut.com",k:"видео монтаж редактор tiktok субтитры reels"},
+ {n:"Higgsfield",c:"video",t:"freemium",i:"🎞️",d:"Кинематографичные движения камеры и видео для соцсетей.",u:"https://higgsfield.ai",k:"видео камера кино соцсети"},
+
+ {n:"ElevenLabs",c:"audio",t:"freemium",i:"🎙️",d:"Лучшая озвучка текста реалистичными голосами, клонирование и дубляж.",u:"https://elevenlabs.io",k:"озвучка голос озвучить tts речь клонирование дубляж аудио"},
+ {n:"Suno",c:"audio",t:"freemium",i:"🎵",d:"Создаёт песни целиком: музыка, вокал и текст по твоему описанию.",u:"https://suno.com",k:"музыка песня трек вокал композиция аудио"},
+ {n:"Udio",c:"audio",t:"freemium",i:"🎶",d:"Генератор музыки с высоким качеством звучания и разными жанрами.",u:"https://www.udio.com",k:"музыка песня трек жанры аудио"},
+ {n:"Murf AI",c:"audio",t:"freemium",i:"🗣️",d:"Студийная озвучка для презентаций, роликов и обучающих курсов.",u:"https://murf.ai",k:"озвучка голос диктор презентации tts"},
+ {n:"Speechify",c:"audio",t:"freemium",i:"📖",d:"Озвучивает любые тексты, статьи и книги, удобно для чтения вслух.",u:"https://speechify.com",k:"озвучка читать вслух книги статьи tts"},
+ {n:"Fish Audio",c:"audio",t:"freemium",i:"🐟",d:"Озвучка и клонирование голоса, много языков.",u:"https://fish.audio",k:"озвучка голос клонирование tts языки"},
+ {n:"Descript",c:"audio",t:"freemium",i:"📝",d:"Монтаж аудио и видео через текст, удаление пауз и шума.",u:"https://www.descript.com",k:"подкаст монтаж транскрипция аудио шум"},
+
+ {n:"Cursor",c:"code",t:"freemium",i:"⌨️",d:"Редактор кода с ИИ внутри: пишет, правит и объясняет проект целиком.",u:"https://cursor.com",k:"код программирование редактор разработка ide"},
+ {n:"GitHub Copilot",c:"code",t:"freemium",i:"🐙",d:"Подсказки кода прямо в редакторе от GitHub и Microsoft.",u:"https://github.com/features/copilot",k:"код автодополнение github программирование"},
+ {n:"Claude Code",c:"code",t:"paid",i:"🛠️",d:"Агент для программирования: работает с проектом из терминала.",u:"https://claude.com/product/claude-code",k:"код агент терминал разработка программирование"},
+ {n:"Lovable",c:"code",t:"freemium",i:"💜",d:"Создаёт готовые сайты и приложения по описанию, без знания кода.",u:"https://lovable.dev",k:"сайт приложение без кода создать конструктор"},
+ {n:"Bolt.new",c:"code",t:"freemium",i:"⚡",d:"Генерирует и запускает веб-приложения прямо в браузере.",u:"https://bolt.new",k:"сайт приложение веб без кода быстро"},
+ {n:"v0 by Vercel",c:"code",t:"freemium",i:"▲",d:"Создаёт интерфейсы и сайты на React по текстовому описанию.",u:"https://v0.dev",k:"сайт интерфейс ui react дизайн vercel"},
+ {n:"Replit",c:"code",t:"freemium",i:"🔁",d:"Онлайн-среда, где ИИ-агент создаёт и запускает приложения.",u:"https://replit.com",k:"код приложение онлайн хостинг агент"},
+ {n:"Windsurf",c:"code",t:"freemium",i:"🏄",d:"ИИ-редактор кода с агентом, который понимает весь проект.",u:"https://windsurf.com",k:"код редактор агент разработка ide"},
+ {n:"Google AI Studio",c:"code",t:"free",i:"🧪",d:"Бесплатная площадка Google: тестируй модели Gemini и собирай приложения.",u:"https://aistudio.google.com",k:"код gemini api разработка приложения бесплатно"},
+ {n:"Tabnine",c:"code",t:"freemium",i:"🔧",d:"Автодополнение кода с упором на приватность и работу в командах.",u:"https://www.tabnine.com",k:"код автодополнение приватность команда"}
+];
+
+const TEMPLATES = {
+ text:  t => `Ты эксперт-аналитик по теме «${t}». Раскрой её максимально глубоко, интересно и без воды. Формат: чёткий структурированный разбор с примерами. Начни с самого сильного факта или хука, чтобы удержать внимание, и заверши конкретными выводами и следующими шагами.`,
+ image: t => `${t}, cinematic composition, highly detailed, dramatic lighting, volumetric light, sharp focus, ultra realistic, 8k, award-winning photography`,
+ video: t => `Cinematic shot: ${t}. Smooth slow camera movement, dramatic lighting, realistic motion and physics, rich colors, 4K quality, 10 seconds.`,
+ audio: t => `Напиши и озвучь увлекательный рассказ на тему «${t}». Голос уверенный, спокойный, как у диктора документального фильма: с паузами, выразительной интонацией и сильной концовкой. Длительность около 1 минуты.`,
+ code:  t => `Создай современный адаптивный сайт на тему «${t}». Тёмная тема, красивый дизайн, плавные анимации, удобная мобильная версия. Весь код в одном HTML-файле (HTML + CSS + JS). Выдай полный рабочий код.`
+};
+
+const $ = id => document.getElementById(id);
+let cat = "all", tier = "all", onlyFav = false, favs = [];
+let gcat = "text";
+
+try { favs = JSON.parse(localStorage.getItem("nexora_favs") || "[]"); } catch(e){}
+function saveFavs(){ try { localStorage.setItem("nexora_favs", JSON.stringify(favs)); } catch(e){} }
+
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+function renderCats(){
+  let h = `<button class="chip ${cat==="all"?"on":""}" data-c="all">Все</button>`;
+  for (const k in CATS) h += `<button class="chip ${cat===k?"on":""}" data-c="${k}">${CATS[k]}</button>`;
+  $("cats").innerHTML = h;
+  $("cats").querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.dataset.c; render(); });
+}
+
+function render(){
+  renderCats();
+  const q = $("q").value.trim().toLowerCase();
+  const list = TOOLS.filter(t =>
+    (cat === "all" || t.c === cat) &&
+    (tier === "all" || t.t === tier) &&
+    (!onlyFav || favs.includes(t.n)) &&
+    (!q || (t.n + " " + t.d + " " + t.k + " " + CAT_NAME[t.c]).toLowerCase().includes(q))
+  );
+  $("favBtn").textContent = `★ Избранное (${favs.length})`;
+  $("favBtn").classList.toggle("on", onlyFav);
+  $("count").textContent = `Найдено: ${list.length} из ${TOOLS.length}`;
+  $("grid").innerHTML = list.length ? list.map(t => `
+    <div class="card">
+      <div class="top">
+        <div class="ic">${t.i}</div>
+        <div><div class="nm">${t.n}</div><div class="ct">${CAT_NAME[t.c]}</div></div>
+        <button class="star ${favs.includes(t.n)?"on":""}" data-n="${t.n}" aria-label="В избранное">${favs.includes(t.n)?"★":"☆"}</button>
+      </div>
+      <div class="desc">${t.d}</div>
+      <div class="foot">
+        <span class="tag t-${t.t}">${TIERS[t.t]}</span>
+        <a class="open" href="${t.u}" target="_blank" rel="noopener">Открыть ↗</a>
+      </div>
+    </div>`).join("") : `<div class="empty">Ничего не найдено. Попробуй другое слово 🙂</div>`;
+  $("grid").querySelectorAll(".star").forEach(b => b.onclick = () => {
+    const n = b.dataset.n;
+    favs = favs.includes(n) ? favs.filter(x => x !== n) : [...favs, n];
+    saveFavs(); render();
+  });
+}
+
+$("q").oninput = render;
+$("tier").onchange = e => { tier = e.target.value; render(); };
+$("favBtn").onclick = () => { onlyFav = !onlyFav; render(); };
+
+function renderGcats(){
+  $("gcats").innerHTML = Object.keys(CATS).map(k =>
+    `<button class="chip ${gcat===k?"on":""}" data-c="${k}">${CATS[k]}</button>`).join("");
+  $("gcats").querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    gcat = b.dataset.c; renderGcats(); makePrompt(true); renderSend();
+  });
+}
+
+function makePrompt(silent){
+  const topic = $("topic").value.trim();
+  if (!topic){ if(!silent) toast("Сначала напиши тему 🙂"); return; }
+  $("prompt").value = TEMPLATES[gcat](topic);
+}
+
+function renderSend(){
+  const list = TOOLS.filter(t => t.c === gcat);
+  $("sendgrid").innerHTML = list.map(t => `
+    <button class="send" data-n="${t.n}">
+      <span class="ic" style="width:36px;height:36px;font-size:18px">${t.i}</span>
+      <span><b>${t.n}</b><small class="${t.p?"auto":""}">${t.p ? "⚡ Авто-подстановка" : "📋 Копирование + открытие"}</small></span>
+    </button>`).join("");
+  $("sendgrid").querySelectorAll(".send").forEach(b => b.onclick = () => {
+    const tool = TOOLS.find(x => x.n === b.dataset.n);
+    sendTo(tool);
+  });
+}
+
+function copyText(text){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  }
+  fallbackCopy(text); return Promise.resolve();
+}
+function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); } catch(e){}
+  document.body.removeChild(ta);
+}
+
+function sendTo(tool){
+  const text = $("prompt").value.trim();
+  if (!text){ toast("Сначала создай промпт ✨"); return; }
+  copyText(text);
+  if (tool.p){
+    window.open(tool.p + encodeURIComponent(text), "_blank");
+    toast("Открываю " + tool.n + " с готовым промптом");
+  } else {
+    window.open(tool.u, "_blank");
+    toast("Промпт скопирован. Вставь его в " + tool.n);
+  }
+}
+
+$("makeBtn").onclick = () => makePrompt(false);
+$("topic").addEventListener("keydown", e => { if (e.key === "Enter") makePrompt(false); });
+$("copyBtn").onclick = () => {
+  const text = $("prompt").value.trim();
+  if (!text){ toast("Сначала создай промпт ✨"); return; }
+  copyText(text); toast("Скопировано ✅");
+};
+
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === b));
+  $("catalog").classList.toggle("hide", b.dataset.v !== "catalog");
+  $("gen").classList.toggle("hide", b.dataset.v !== "gen");
+  window.scrollTo({top:0});
+});
+
+render(); renderGcats(); renderSend();
+</script>
+</body>
+</html>
